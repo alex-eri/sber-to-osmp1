@@ -2,9 +2,12 @@ import csv
 import urllib.request
 import sys
 import datetime
+import xml.etree.ElementTree as ET
+
+prefix = ""
 
 host = "admin.fotonx.ru"
-path = "billing/paysys/osmp.cgi"
+path = "cgi-bin/osmp.cgi"
 url_base = "http://{host}/{path}".format(host=host,path=path)
 
 check = "command=check&account={account}&txn_id={txn_id}&sum={sum}"
@@ -18,19 +21,52 @@ print('Loading %s' % filename)
 
 def push(to,row):
     q = to.format(**row)
-    print(q)
-    #urllib.request.urlopen()
+    url = '?'.join([url_base,q])
+    print(url)
+    try:
+        re = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as e:
+        print('[http {}]'.format(e.code))
+        return
+    data = re.read().decode()
+    try:
+        root = ET.fromstring(data)
+    except:
+        print('[bad xml]')
+        print(data)
+        return
+
+    assert root.tag == 'response', 'bad format'
+    code = int(root.find('result').text)
+    assert code == 0, 'Status %s' % code
+    return True
+
+
 
 
 def parse(row):
 
-
+    row['txn_id'] = prefix + row['txn_id']
     row['txn_date'] = datetime.datetime.strptime( "%s %s" % (row['date'], row['time']), '%d-%m-%y %H-%M-%S')
 
     print(row['txn_date'], row['account'])
 
-    if push(check,row):
+    try:
+        print('check', end='')
+        push(check,row)
+        print('[ok]')
+    except Exception as e:
+        print('[failed]', end='')
+        print(e)
+        return
+    try:
+        print('pay', end='')
         push(pay,row)
+        print('[ok]')
+    except Exception as e:
+        print('[failed]', end='')
+        print(e)
+
 
 
 fieldnames = [
