@@ -45,9 +45,9 @@ with connection.cursor() as cursor:
     sql = ( "SELECT {}, name, address, balance FROM accounts"
         " JOIN agreements ON agreements.uid = accounts.uid"
         " LEFT JOIN accounts_addr ON  accounts_addr.uid = accounts.uid"
-        " WHERE accounts.type = 2"
+        " WHERE accounts.type = 2 and agreements.archive = 0"
         ).format(DOG_FIELD)
-    print(sql)
+    #print(sql)
     cursor.execute(sql)
     name = '_'.join([INN,RS,X,D])+'.txt'
     print(name)
