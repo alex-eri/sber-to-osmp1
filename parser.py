@@ -6,8 +6,9 @@ import xml.etree.ElementTree as ET
 
 prefix = ""
 
-host = "admin.fotonx.ru"
+host = "billing.example.com"
 path = "cgi-bin/osmp.cgi"
+
 url_base = "http://{host}/{path}".format(host=host,path=path)
 
 check = "command=check&account={account}&txn_id={txn_id}&sum={sum}"
