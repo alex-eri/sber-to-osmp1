@@ -29,11 +29,11 @@ def push(to,row):
         print('[http {}]'.format(e.code))
         return
     data = re.read().decode()
+    print(data)
     try:
         root = ET.fromstring(data)
     except:
         print('[bad xml]')
-        print(data)
         return
 
     assert root.tag == 'response', 'bad format'
@@ -47,12 +47,13 @@ def push(to,row):
 def parse(row):
 
     row['txn_id'] = prefix + row['txn_id']
-    row['txn_date'] = datetime.datetime.strptime( "%s %s" % (row['date'], row['time']), '%d-%m-%y %H-%M-%S')
+    row['txn_date'] = datetime.datetime.strptime( "%s %s" % (row['date'], row['time']), '%d-%m-%Y %H-%M-%S')
+    row['sum'] = row['sum'].replace(',','.')
 
     print(row['txn_date'], row['account'])
 
     try:
-        print('check', end='')
+        print('check', end=' ')
         push(check,row)
         print('[ok]')
     except Exception as e:
@@ -60,11 +61,11 @@ def parse(row):
         print(e)
         return
     try:
-        print('pay', end='')
+        print('pay', end=' ')
         push(pay,row)
         print('[ok]')
     except Exception as e:
-        print('[failed]', end='')
+        print('[failed]', end=' ')
         print(e)
 
 
@@ -89,5 +90,5 @@ with codecs.open(filename,encoding='cp1251') as csvfile:
     reader = csv.DictReader(csvfile,fieldnames=fieldnames,delimiter=';')
     for row in reader:
         if "=" in row['date']:
-            pass
+            continue
         parse(row)
