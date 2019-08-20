@@ -4,6 +4,8 @@ import sys
 import datetime
 import xml.etree.ElementTree as ET
 
+from kassa import Kassa
+
 prefix = ""
 
 host = "biiling.example.com"
@@ -71,8 +73,6 @@ def parse(row):
         print('[failed]', end='')
         print(e)
 
-
-
 fieldnames = [
 'hz1',
 'hz2',
@@ -87,8 +87,10 @@ fieldnames = [
 'txn_id'
 ]
 
-
 import codecs
+
+
+kassa = Kassa("COM4",115200)
 
 with codecs.open(filename,encoding='cp1251') as csvfile:
     reader = csv.DictReader(csvfile,fieldnames=fieldnames,delimiter=';')
@@ -96,4 +98,5 @@ with codecs.open(filename,encoding='cp1251') as csvfile:
         if "#" in row['hz1']:
             continue
         print(row)
-        parse(row)
+        if parse(row):
+            kassa.bill(row)

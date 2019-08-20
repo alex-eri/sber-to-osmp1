@@ -1,0 +1,3 @@
+pyserial
+unilog
+git+https://github.com/m0x3/pyshtrih.git
