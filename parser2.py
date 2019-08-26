@@ -88,8 +88,6 @@ fieldnames = [
 ]
 
 import codecs
-
-
 kassa = Kassa("COM4",115200)
 
 with codecs.open(filename,encoding='cp1251') as csvfile:

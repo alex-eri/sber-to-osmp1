@@ -13,7 +13,7 @@ class Kassa:
         a = row['account']
         device.open_check(0)
         device.sale(
-            (u'Оплата по л/с %s' % a, 1, s), tax1=1
+            (u'Оплата по л/с %s' % a, 1, s)
         )
         device.close_check(s)
 

@@ -60,15 +60,16 @@ def parse(row):
     except Exception as e:
         print('[failed]', end='')
         print(e)
-        return
+        return False
     try:
         print('pay', end=' ')
         push(pay,row)
         print('[ok]')
+        return True
     except Exception as e:
         print('[failed]', end=' ')
         print(e)
-
+        return False
 
 
 fieldnames = [
@@ -87,9 +88,12 @@ fieldnames = [
 
 import codecs
 
+kassa = Kassa("COM4",115200)
+
 with codecs.open(filename,encoding='cp1251') as csvfile:
     reader = csv.DictReader(csvfile,fieldnames=fieldnames,delimiter=';')
     for row in reader:
         if "=" in row['date']:
             continue
-        parse(row)
+        if parse(row):
+            kassa.bill(row)
