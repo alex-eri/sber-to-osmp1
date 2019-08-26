@@ -88,7 +88,7 @@ fieldnames = [
 
 import codecs
 
-kassa = Kassa("COM4",115200)
+kassa = Kassa("socket://192.168.137.111:7778",115200)
 
 with codecs.open(filename,encoding='cp1251') as csvfile:
     reader = csv.DictReader(csvfile,fieldnames=fieldnames,delimiter=';')
