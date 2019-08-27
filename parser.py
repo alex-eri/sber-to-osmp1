@@ -88,7 +88,9 @@ fieldnames = [
 
 import codecs
 
-kassa = Kassa("socket://192.168.137.111:7778",115200)
+from kassa import Kassa
+
+k = Kassa("socket://192.168.137.111:7778",115200)
 
 with codecs.open(filename,encoding='cp1251') as csvfile:
     reader = csv.DictReader(csvfile,fieldnames=fieldnames,delimiter=';')
@@ -96,4 +98,4 @@ with codecs.open(filename,encoding='cp1251') as csvfile:
         if "=" in row['date']:
             continue
         if parse(row):
-            kassa.bill(row)
+            k.bill(row)

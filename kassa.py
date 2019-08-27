@@ -15,7 +15,7 @@ class Kassa:
 
     def bill(self, row):
         s = row['sum']
-        s = int(s) * 100
+        s = int(float(s) * 100)
         a = row['account']
 
         cashier = pyshtrih.FD({1021: u'Кассир: Лебедева С.Н.'})
